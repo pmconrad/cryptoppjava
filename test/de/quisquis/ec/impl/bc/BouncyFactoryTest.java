@@ -14,8 +14,6 @@ import java.security.SignatureException;
 
 import java.util.Random;
 
-import org.bouncycastle.jce.spec.IESParameterSpec;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -29,7 +27,6 @@ public class BouncyFactoryTest {
     protected static ECFactory instance;
     protected static Random prng;
     protected static KeyPair keys, moreKeys;
-    protected static IESParameterSpec params;
 
     @BeforeClass
     public static void setUpClass() {
@@ -38,7 +35,6 @@ public class BouncyFactoryTest {
         keys = generator.generate();
         moreKeys = generator.generate();
         prng = new Random(12345);
-        params = new IESParameterSpec(new byte[0], new byte[0], 128);
     }
 
     @AfterClass
@@ -75,17 +71,15 @@ public class BouncyFactoryTest {
         byte plain[] = new byte[299];
         prng.nextBytes(plain);
         byte cipher[] = instance.getEncrypter(moreKeys.getPrivate(),
-                                              keys.getPublic(), params)
+                                              keys.getPublic())
                                 .encrypt(plain);
         Decrypter decrypter = instance.getDecrypter(keys.getPrivate(),
-                                                    moreKeys.getPublic(),
-                                                    params);
+                                                    moreKeys.getPublic());
         byte decrypted[] = decrypter.decrypt(cipher);
         assertArrayEquals(plain, decrypted);
 
         try {
-            instance.getDecrypter(moreKeys.getPrivate(), moreKeys.getPublic(),
-                                  params)
+            instance.getDecrypter(moreKeys.getPrivate(), moreKeys.getPublic())
                     .decrypt(cipher);
             fail("Expected exception!");
         } catch (IllegalStateException expected) {}

@@ -15,8 +15,6 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Security;
 
-import java.security.spec.AlgorithmParameterSpec;
-
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 /** An ECFactory implementation making use of JCA-provided crypto
@@ -40,15 +38,13 @@ public class BouncyFactory extends ECFactory {
     }
 
     @Override
-    public Encrypter getEncrypter(PrivateKey priv, PublicKey pub,
-                                  AlgorithmParameterSpec params) {
-        return new BouncyEncrypter(priv, pub, params);
+    public Encrypter getEncrypter(PrivateKey priv, PublicKey pub) {
+        return new BouncyEncrypter(priv, pub);
     }
 
     @Override
-    public Decrypter getDecrypter(PrivateKey priv, PublicKey pub,
-                                  AlgorithmParameterSpec params) {
-        return new BouncyDecrypter(priv, pub, params);
+    public Decrypter getDecrypter(PrivateKey priv, PublicKey pub) {
+        return new BouncyDecrypter(priv, pub);
     }
 
     @Override

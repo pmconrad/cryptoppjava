@@ -8,8 +8,6 @@ import de.quisquis.ec.impl.bc.BouncyFactory;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
-import java.security.spec.AlgorithmParameterSpec;
-
 /** Provides an abstract entry point for implementations of ECDSA signature
  *  creation/verification and ECIES en-/decryption.
  *
@@ -33,17 +31,13 @@ public abstract class ECFactory {
 
     /** @param priv our private key to use
      *  @param pub the public encryption key to use
-     *  @param params IES algorithm parameters to use
      * @return an Encrypter implementation provided by this factory */
-    public abstract Encrypter getEncrypter(PrivateKey priv, PublicKey pub,
-                                           AlgorithmParameterSpec params);
+    public abstract Encrypter getEncrypter(PrivateKey priv, PublicKey pub);
 
     /** @param priv the decryption key to use
      *  @param pub the sender's public key
-     *  @param params IES algorithm parameters to use
      * @return an Decrypter implementation provided by this factory */
-    public abstract Decrypter getDecrypter(PrivateKey priv, PublicKey pub,
-                                           AlgorithmParameterSpec params);
+    public abstract Decrypter getDecrypter(PrivateKey priv, PublicKey pub);
 
     /** @param curve the standardized curve for which the desired Generator is
      *               to produce keys
