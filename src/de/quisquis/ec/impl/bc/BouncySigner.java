@@ -1,13 +1,14 @@
 /* (C) 2014 Peter Conrad
  * All rights reserved.
  */
-package de.quisquis.ec.impl.jca;
+package de.quisquis.ec.impl.bc;
 
 import de.quisquis.ec.Signer;
 
 import java.security.InvalidKeyException;
 
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.Signature;
 import java.security.SignatureException;
@@ -16,15 +17,15 @@ import java.security.SignatureException;
  *
  * @author Peter Conrad
  */
-public class JcaSigner implements Signer {
+public class BouncySigner implements Signer {
     private final PrivateKey key;
     private final Signature signature;
 
-    public JcaSigner(PrivateKey key) {
+    public BouncySigner(PrivateKey key) {
         this.key = key;
         try {
-            signature = Signature.getInstance("ECDSA");
-        } catch (NoSuchAlgorithmException e) {
+            signature = Signature.getInstance("ECDSA", "BC");
+        } catch (NoSuchAlgorithmException | NoSuchProviderException e) {
             throw new IllegalStateException("No ECDSA?!", e);
         }
     }

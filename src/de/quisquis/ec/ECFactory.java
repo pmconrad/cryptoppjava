@@ -3,12 +3,12 @@
  */
 package de.quisquis.ec;
 
-import de.quisquis.ec.impl.KeyGenerator;
-
-import de.quisquis.ec.impl.jca.JcaFactory;
+import de.quisquis.ec.impl.bc.BouncyFactory;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
+
+import java.security.spec.AlgorithmParameterSpec;
 
 /** Provides an abstract entry point for implementations of ECDSA signature
  *  creation/verification and ECIES en-/decryption.
@@ -20,7 +20,7 @@ public abstract class ECFactory {
 
     /** @return the "best" available ECFactory */
     public static ECFactory getInstance() {
-        return new JcaFactory();
+        return new BouncyFactory();
     }
 
     /** @param key the private key to use for creating signatures
@@ -31,18 +31,22 @@ public abstract class ECFactory {
      * @return a Verifier implementation provided by this factory */
     public abstract Verifier getVerifier(PublicKey key);
 
-    /** @param key the encryption key to use
+    /** @param priv our private key to use
+     *  @param pub the public encryption key to use
+     *  @param params IES algorithm parameters to use
      * @return an Encrypter implementation provided by this factory */
-    public abstract Encrypter getEncrypter(PublicKey key);
+    public abstract Encrypter getEncrypter(PrivateKey priv, PublicKey pub,
+                                           AlgorithmParameterSpec params);
 
-    /** @param key the decryption key to use
+    /** @param priv the decryption key to use
+     *  @param pub the sender's public key
+     *  @param params IES algorithm parameters to use
      * @return an Decrypter implementation provided by this factory */
-    public abstract Decrypter getDecrypter(PrivateKey key);
+    public abstract Decrypter getDecrypter(PrivateKey priv, PublicKey pub,
+                                           AlgorithmParameterSpec params);
 
     /** @param curve the standardized curve for which the desired Generator is
      *               to produce keys
      *  @return an Generator implementation provided by this factory */
-    public Generator getGenerator(Curve curve) {
-        return new KeyGenerator(curve);
-    }
+    public abstract Generator getGenerator(Curve curve);
 }

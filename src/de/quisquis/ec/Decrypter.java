@@ -12,7 +12,8 @@ public interface Decrypter {
      *  this Decrypter.
      * @param ciphertext the ciphertext to decrypt
      * @return the plaintext
-     * @throws IllegalStateException if something goes wrong
+     * @throws IllegalStateException if something goes wrong (including MAC
+     * mismatch after decryption)
      */
     public byte[] decrypt(byte ciphertext[]);
 }
