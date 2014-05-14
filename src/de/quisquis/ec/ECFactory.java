@@ -5,6 +5,8 @@ package de.quisquis.ec;
 
 import de.quisquis.ec.impl.bc.BouncyFactory;
 
+import de.quisquis.ec.impl.pp.CryptoppFactory;
+
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
@@ -14,11 +16,21 @@ import java.security.PublicKey;
  * @author Peter Conrad
  */
 public abstract class ECFactory {
+    private static final ECFactory INSTANCE;
+
+    static {
+        if (CryptoppFactory.isUsable()) {
+            INSTANCE = new CryptoppFactory();
+        } else {
+            INSTANCE = new BouncyFactory();
+        }
+    }
+
     protected ECFactory() {}
 
     /** @return the "best" available ECFactory */
     public static ECFactory getInstance() {
-        return new BouncyFactory();
+        return INSTANCE;
     }
 
     /** @param key the private key to use for creating signatures

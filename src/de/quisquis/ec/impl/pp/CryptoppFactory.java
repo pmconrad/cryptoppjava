@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  * @author Peter Conrad
  */
 public class CryptoppFactory extends ECFactory {
-    public static final boolean IS_USABLE;
+    private static final boolean IS_USABLE;
 
     static {
         boolean usable = false;
@@ -36,6 +36,8 @@ public class CryptoppFactory extends ECFactory {
         }
         IS_USABLE = usable;
     }
+
+    public static boolean isUsable() { return IS_USABLE; }
 
     public CryptoppFactory() {
         if (!IS_USABLE) {
