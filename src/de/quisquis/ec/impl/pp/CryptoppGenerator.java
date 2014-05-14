@@ -13,15 +13,16 @@ import java.security.KeyPair;
 import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
 
-import org.bouncycastle.crypto.params.ECDomainParameters;
-import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
-import org.bouncycastle.crypto.params.ECPublicKeyParameters;
+import java.security.spec.ECField;
+import java.security.spec.ECFieldFp;
+import java.security.spec.ECParameterSpec;
+import java.security.spec.ECPoint;
+import java.security.spec.ECPrivateKeySpec;
+import java.security.spec.ECPublicKeySpec;
+import java.security.spec.EllipticCurve;
 
 import org.bouncycastle.jce.provider.JCEECPrivateKey;
 import org.bouncycastle.jce.provider.JCEECPublicKey;
-
-import org.bouncycastle.math.ec.ECCurve;
-import org.bouncycastle.math.ec.ECPoint;
 
 /** A CryptoPP-based @link{Generator} implementation.
  *
@@ -38,7 +39,7 @@ public class CryptoppGenerator implements Generator {
     }
 
     /** Note: there is some cheating involved here in that I use bouncycastle's
-     *  elliptic curve math and its ECKey implementations. The JDK doesn't have
+     *  ECKey implementations. The JDK doesn't have
      *  these implementations, and it doesn't make sense to re-implement them
      *  myself.
      * @return a newly generated key pair on this Generator's curve */
@@ -46,22 +47,27 @@ public class CryptoppGenerator implements Generator {
     public KeyPair generate() {
         EcData generated = CryptoppNative.generate(curve.getIdentifier());
         BigInteger p = new BigInteger(generated.curveModulus);
+        ECField field = new ECFieldFp(p);
+
         BigInteger a = new BigInteger(generated.curveA);
         BigInteger b = new BigInteger(generated.curveB);
-        ECCurve ec = new ECCurve.Fp(p, a, b);
+        EllipticCurve ec = new EllipticCurve(field, a, b);
+
         BigInteger gX = new BigInteger(generated.gX);
         BigInteger gY = new BigInteger(generated.gY);
-        ECPoint g = ec.createPoint(gX, gY);
+        ECPoint g = new ECPoint(gX, gY);
         BigInteger n = new BigInteger(generated.n);
-        ECDomainParameters params = new ECDomainParameters(ec, g, n);
+        ECParameterSpec params = new ECParameterSpec(ec, g, n, 1);
+
         BigInteger qX = new BigInteger(generated.qX);
         BigInteger qY = new BigInteger(generated.qY);
-        ECPoint q = ec.createPoint(qX, qY);
-        ECPublicKeyParameters pubParams = new ECPublicKeyParameters(q, params);
+        ECPoint q = new ECPoint(qX, qY);
+        ECPublicKeySpec pubParams = new ECPublicKeySpec(q, params);
         ECPublicKey pubKey = new JCEECPublicKey("EC", pubParams);
+
         BigInteger x = new BigInteger(generated.x);
-        ECPrivateKeyParameters privParams;
-        privParams = new ECPrivateKeyParameters(x, params);
+        ECPrivateKeySpec privParams;
+        privParams = new ECPrivateKeySpec(x, params);
         ECPrivateKey privKey = new JCEECPrivateKey(pubKey.getAlgorithm(),
                                                    privParams);
         return new KeyPair(pubKey, privKey);
