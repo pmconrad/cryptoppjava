@@ -1,7 +1,7 @@
 /* (C) 2014 Peter Conrad
  * All rights reserved.
  */
-package de.quisquis.ec.impl.bc;
+package de.quisquis.ec.impl.pp;
 
 import de.quisquis.ec.AbstractFactoryTest;
 
@@ -11,10 +11,10 @@ import org.junit.BeforeClass;
  *
  * @author Peter Conrad
  */
-public class BouncyFactoryTest extends AbstractFactoryTest {
+public class CryptoppFactoryTest extends AbstractFactoryTest {
     @BeforeClass
     public static void setUpClass() {
-        instance = new BouncyFactory();
+        instance = new CryptoppFactory();
         AbstractFactoryTest.setUpClass();
     }
 }
