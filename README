@@ -1,0 +1,63 @@
+This is a proof-of-concept implementation of Java bindings for (some of)
+the elliptic curve functions of the CryptoPP library.
+
+NOTE THAT THIS PROJECT IS IN AN EXPERIMENTAL STADIUM AND SHOULD NOT BE
+USED IN PRODUCTION CODE!
+
+Requirements
+============
+
+* Java 7 (or later) JDK
+* ant
+* optionally netbeans
+* c++ compiler
+* make utility
+* cryptopp library + headers
+
+Building
+========
+
+* Check out a working copy
+* cd csrc
+* make
+
+Alternatively, open the project in Netbeans, navigate to the csrc directory in
+the "Files" tab, and execute make via right click on the Makefile.
+
+The java class files will be put into the build/classes directory, the native
+code library into build/c.
+
+Using
+=====
+
+The entry point into this library is de.quisquis.ec.ECFactory .
+ECFactory.getInstance will return a CryptoppFactory instance if the native
+library is available, or an alternative implementation based on the
+Bouncycastle java crypto library.
+
+The ECFactory provides methods to create objects implementing basic crypto
+functions, namely:
+
+* generate key pairs
+* sign messages
+* verify signatures
+* encrypt messages
+* decrypt messages
+
+Note that the cryptoppjava native code library must reside in a directory
+where it can be found by System.loadLibrary. This is typically
+- a system directory, or
+- specified through the LD_LIBRARY_PATH environment variable
+- specified through the java.library.path system property
+
+When you're using netbeans, it is already configure to set the java.library.path
+property to "build/c" for running the unit tests.
+
+Known Problems
+==============
+
+Interoperability of the Bouncecastle-based and CryptoPP-based implementations
+has NOT been tested. According to this, they're most likely not interoperable:
+http://www.cryptopp.com/wiki/Elliptic_Curve_Integrated_Encryption_Scheme#Bouncy_Castle
+A patch for the CryptoPP library exists, so this can probably be solved.
+
