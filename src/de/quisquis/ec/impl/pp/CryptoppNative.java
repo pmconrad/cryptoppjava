@@ -10,7 +10,7 @@ import java.security.SignatureException;
  * @author Peter Conrad
  */
 final class CryptoppNative {
-    static native byte[][] generate(String curveName);
+    static native EcData generate(String curveName);
 
     static native byte[] sign(byte message[], byte modulus[], byte a[],
                               byte b[], byte gX[], byte gY[], byte n[],

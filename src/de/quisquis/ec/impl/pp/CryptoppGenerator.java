@@ -44,27 +44,26 @@ public class CryptoppGenerator implements Generator {
      * @return a newly generated key pair on this Generator's curve */
     @Override
     public KeyPair generate() {
-        byte generated[][] = CryptoppNative.generate(curve.getIdentifier());
-        BigInteger p = new BigInteger(generated[0]);
-        BigInteger a = new BigInteger(generated[1]);
-        BigInteger b = new BigInteger(generated[2]);
+        EcData generated = CryptoppNative.generate(curve.getIdentifier());
+        BigInteger p = new BigInteger(generated.curveModulus);
+        BigInteger a = new BigInteger(generated.curveA);
+        BigInteger b = new BigInteger(generated.curveB);
         ECCurve ec = new ECCurve.Fp(p, a, b);
-        BigInteger gX = new BigInteger(generated[3]);
-        BigInteger gY = new BigInteger(generated[4]);
+        BigInteger gX = new BigInteger(generated.gX);
+        BigInteger gY = new BigInteger(generated.gY);
         ECPoint g = ec.createPoint(gX, gY);
-        BigInteger n = new BigInteger(generated[5]);
+        BigInteger n = new BigInteger(generated.n);
         ECDomainParameters params = new ECDomainParameters(ec, g, n);
-        BigInteger x = new BigInteger(generated[6]);
+        BigInteger qX = new BigInteger(generated.qX);
+        BigInteger qY = new BigInteger(generated.qY);
+        ECPoint q = ec.createPoint(qX, qY);
+        ECPublicKeyParameters pubParams = new ECPublicKeyParameters(q, params);
+        ECPublicKey pubKey = new JCEECPublicKey("EC", pubParams);
+        BigInteger x = new BigInteger(generated.x);
         ECPrivateKeyParameters privParams;
         privParams = new ECPrivateKeyParameters(x, params);
-        ECPrivateKey privKey = new JCEECPrivateKey("EC", privParams);
-        return new KeyPair(derivePubkey(privKey, params), privKey);
-    }
-
-    private static ECPublicKey derivePubkey(ECPrivateKey privKey,
-                                            ECDomainParameters params) {
-        ECPoint q = params.getG().multiply(privKey.getS());
-        ECPublicKeyParameters pubParams = new ECPublicKeyParameters(q, params);
-        return new JCEECPublicKey(privKey.getAlgorithm(), pubParams);
+        ECPrivateKey privKey = new JCEECPrivateKey(pubKey.getAlgorithm(),
+                                                   privParams);
+        return new KeyPair(pubKey, privKey);
     }
 }
