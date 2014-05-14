@@ -32,7 +32,7 @@ JNIEXPORT jbyteArray JNICALL Java_de_quisquis_ec_impl_pp_CryptoppNative_sign
         return NULL; // FIXME: check/throw exception
     }
     jbyte *bytes = env->GetByteArrayElements(sig, NULL);
-    if (bytes != NULL) {
+    if (bytes == NULL) {
         return NULL; // FIXME: check/throw exception
     }
     memcpy(bytes, sigBuf, siglen);
