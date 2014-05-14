@@ -35,6 +35,7 @@ JNIEXPORT jbyteArray JNICALL Java_de_quisquis_ec_impl_pp_CryptoppNative_encrypt
         }
     }
     env->ReleaseByteArrayElements(plaintext, plainBytes, JNI_ABORT);
+    return result;
 }
 
 } /* extern "C" */
