@@ -1,6 +1,6 @@
 #include "helpers.h"
 
-jbyteArray integerToByteArray(JNIEnv *env, const CryptoPP::Integer &number) {
+jbyteArray integerToByteArray(const JNIEnv *env, const CryptoPP::Integer &number) {
     size_t len = number.MinEncodedSize(CryptoPP::Integer::SIGNED);
     jbyteArray result = env->NewByteArray(len);
     if (result == NULL) {
@@ -15,7 +15,7 @@ jbyteArray integerToByteArray(JNIEnv *env, const CryptoPP::Integer &number) {
     return result;
 }
 
-CryptoPP::Integer byteArrayToInteger(JNIEnv *env, const jbyteArray &array) {
+CryptoPP::Integer byteArrayToInteger(const JNIEnv *env, const jbyteArray &array) {
     jbyte *bytes = env->GetByteArrayElements(array, NULL);
     if (bytes == NULL) {
 	return NULL; // FIXME: check/throw exception

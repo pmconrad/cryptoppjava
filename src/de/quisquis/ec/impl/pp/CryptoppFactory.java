@@ -14,6 +14,9 @@ import de.quisquis.ec.Verifier;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /** An ECFactory implementation making use of JCA-provided crypto
  *  implementations.
  *
@@ -24,14 +27,13 @@ public class CryptoppFactory extends ECFactory {
 
     static {
         boolean usable = false;
-        /*
         try {
-            System.loadLibrary(...);
+            System.loadLibrary("cryptoppjava");
             usable = true;
         } catch (Throwable e) {
-            Logger.log("Failed to load CryptoPP library", e);
+            Logger.getLogger("CryptoppFactory")
+                  .log(Level.WARNING, "Failed to load CryptoPP library", e);
         }
-        */
         IS_USABLE = usable;
     }
 

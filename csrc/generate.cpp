@@ -1,6 +1,5 @@
 #include <cryptopp/eccrypto.h>
 #include <cryptopp/osrng.h>
-#include <cryptopp/validate.h>
 
 #include "de_quisquis_ec_impl_pp_CryptoppNative.h"
 #include "curves.h"
@@ -10,9 +9,12 @@ extern "C" {
 
 JNIEXPORT jobject JNICALL Java_de_quisquis_ec_impl_pp_CryptoppNative_generate
   (JNIEnv *env, jclass clazz, jstring curvename) {
+
+    CryptoPP::AutoSeededRandomPool prng;
+
     const char *name = env->GetStringUTFChars(curvename, 0);
     CryptoPP::DL_PrivateKey_EC<CryptoPP::ECP> key;
-    key.GenerateRandom(GlobalRNG(),
+    key.GenerateRandom(prng,
 		       CryptoPP::MakeParameters(CryptoPP::Name::GroupOID(),
 					        curveByName(std::string(name))));
     env->ReleaseStringUTFChars(curvename, name);

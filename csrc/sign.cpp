@@ -1,5 +1,5 @@
 #include <cryptopp/eccrypto.h>
-#include <cryptopp/validate.h>
+#include <cryptopp/osrng.h>
 
 #include "de_quisquis_ec_impl_pp_CryptoppNative.h"
 #include "curves.h"
@@ -12,6 +12,8 @@ JNIEXPORT jbyteArray JNICALL Java_de_quisquis_ec_impl_pp_CryptoppNative_sign
    jbyteArray a, jbyteArray b, jbyteArray gX, jbyteArray gY, jbyteArray n,
    jbyteArray x) {
 
+    CryptoPP::AutoSeededRandomPool prng;
+
     CryptoPP::ECDSA<CryptoPP::ECP,CryptoPP::SHA1>::Signer signer;
     initPrivateKey(env, signer.AccessKey(), modulus, a, b, gX, gY, n, x);
 
@@ -21,8 +23,8 @@ JNIEXPORT jbyteArray JNICALL Java_de_quisquis_ec_impl_pp_CryptoppNative_sign
     }
     size_t siglen = signer.MaxSignatureLength();
     byte sigBuf[siglen];
-    siglen = signer.SignMessage(GlobalRNG(), msgBytes,
-				env->GetArrayLength(message), sigBuf);
+    siglen = signer.SignMessage(prng, msgBytes, env->GetArrayLength(message),
+                                sigBuf);
     env->ReleaseByteArrayElements(message, msgBytes, JNI_ABORT);
 
     jbyteArray sig = env->NewByteArray(siglen);

@@ -1,5 +1,5 @@
 #include <cryptopp/eccrypto.h>
-#include <cryptopp/validate.h>
+#include <cryptopp/osrng.h>
 
 #include "de_quisquis_ec_impl_pp_CryptoppNative.h"
 #include "curves.h"
@@ -30,7 +30,8 @@ JNIEXPORT jbyteArray JNICALL Java_de_quisquis_ec_impl_pp_CryptoppNative_encrypt
         if (bytes == NULL) {
             // FIXME: check/throw exception
         } else {
-            encrypter.Encrypt(GlobalRNG(), plainBytes, plainLen, bytes);
+            CryptoPP::AutoSeededRandomPool prng;
+            encrypter.Encrypt(prng, plainBytes, plainLen, bytes);
             env->ReleaseByteArrayElements(result, bytes, 0);
         }
     }
