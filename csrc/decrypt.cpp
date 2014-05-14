@@ -25,22 +25,21 @@ JNIEXPORT jbyteArray JNICALL Java_de_quisquis_ec_impl_pp_CryptoppNative_decrypt
     byte plainBuf[decrypter.MaxPlaintextLength(cipherLen)];
     CryptoPP::DecodingResult result = decrypter.Decrypt(prng, cipherBytes,
                                                         cipherLen, plainBuf);
-    jbyteArray plaintext;
+    env->ReleaseByteArrayElements(ciphertext, cipherBytes, 0);
+
     if (!result.isValidCoding) {
-        plaintext = NULL;
-        // FIXME: throw exception
-    } else {
-        jbyteArray plaintext = env->NewByteArray(result.messageLength);
-        if (plaintext == NULL) {
-            return NULL; // FIXME: check/throw exception
-        }
-        jbyte *bytes = env->GetByteArrayElements(plaintext, NULL);
-        if (bytes == NULL) {
-            return NULL; // FIXME: check/throw exception
-        }
-        memcpy(bytes, plainBuf, result.messageLength);
-        env->ReleaseByteArrayElements(plaintext, bytes, 0);
+        return NULL; // FIXME: throw exception
     }
+    jbyteArray plaintext = env->NewByteArray(result.messageLength);
+    if (plaintext == NULL) {
+        return NULL; // FIXME: check/throw exception
+    }
+    jbyte *bytes = env->GetByteArrayElements(plaintext, NULL);
+    if (bytes == NULL) {
+        return NULL; // FIXME: check/throw exception
+    }
+    memcpy(bytes, plainBuf, result.messageLength);
+    env->ReleaseByteArrayElements(plaintext, bytes, 0);
     return plaintext;
 }
 
