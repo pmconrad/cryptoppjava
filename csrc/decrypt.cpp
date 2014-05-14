@@ -21,9 +21,8 @@ JNIEXPORT jbyteArray JNICALL Java_de_quisquis_ec_impl_pp_CryptoppNative_decrypt
     if (cipherBytes == NULL) {
         return NULL; // FIXME: check/throw exception
     }
-    jsize cipherLen = env->GetArrayLength(ciphertext);
-    size_t plainLen = decrypter.MaxPlaintextLength(cipherLen);
-    byte plainBuf[plainLen];
+    const jsize cipherLen = env->GetArrayLength(ciphertext);
+    byte plainBuf[decrypter.MaxPlaintextLength(cipherLen)];
     CryptoPP::DecodingResult result = decrypter.Decrypt(prng, cipherBytes,
                                                         cipherLen, plainBuf);
     jbyteArray plaintext;
@@ -31,7 +30,7 @@ JNIEXPORT jbyteArray JNICALL Java_de_quisquis_ec_impl_pp_CryptoppNative_decrypt
         plaintext = NULL;
         // FIXME: throw exception
     } else {
-        jbyteArray plaintext = env->NewByteArray(cipherLen);
+        jbyteArray plaintext = env->NewByteArray(result.messageLength);
         if (plaintext == NULL) {
             return NULL; // FIXME: check/throw exception
         }
