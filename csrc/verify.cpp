@@ -18,7 +18,7 @@ JNIEXPORT jboolean JNICALL Java_de_quisquis_ec_impl_pp_CryptoppNative_verify
 
     jbyte *msgBytes = env->GetByteArrayElements(message, NULL);
     if (msgBytes == NULL) {
-        return NULL; // FIXME: check/throw exception
+        return false; // FIXME: check/throw exception
     }
     jbyte *sigBytes = env->GetByteArrayElements(signature, NULL);
     if (sigBytes == NULL) {
