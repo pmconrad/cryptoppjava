@@ -1,6 +1,7 @@
-CFLAGS=-Wall -fPIC -fpermissive -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux
+CXXFLAGS=-Wall -fPIC -fpermissive -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux \
+	 -D_REENTRANT -D_POSIX_C_SOURCE
 
-CXXFLAGS=-Wall -fPIC -fpermissive -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux
+CFLAGS=$(CXXFLAGS)
 
 all: rec
 
