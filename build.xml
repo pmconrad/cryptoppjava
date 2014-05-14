@@ -70,4 +70,10 @@
     nbproject/build-impl.xml file. 
 
     -->
+    <target name="jni" depends="compile">
+        <mkdir dir="${build.generated.dir}/include"/>
+        <javah classpath="${build.classes.dir}"
+               destdir="${build.generated.dir}/include"
+               class="de.quisquis.ec.impl.pp.CryptoppNative"/>
+    </target>
 </project>

@@ -4,6 +4,7 @@
 package de.quisquis.ec.impl.pp;
 
 import java.math.BigInteger;
+
 import java.security.interfaces.ECKey;
 import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
@@ -21,6 +22,19 @@ class EcData {
     final byte[] curveModulus, curveA, curveB;
     final byte[] gX, gY, n;
     final byte[] qX, qY, x;
+
+    private EcData(byte modulus[], byte a[], byte b[], byte gX[], byte gY[],
+                   byte n[], byte qX[], byte qY[], byte x[]) {
+        curveModulus = modulus;
+        curveA = a;
+        curveB = b;
+        this.gX = gX;
+        this.gY = gY;
+        this.n = n;
+        this.qX = qX;
+        this.qY = qY;
+        this.x = x;
+    }
 
     private EcData(ECKey key, ECPoint q, BigInteger x) {
         ECParameterSpec params = key.getParams();
