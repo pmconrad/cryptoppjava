@@ -23,9 +23,13 @@ public class CryptoppDecrypter implements Decrypter {
 
     @Override
     public byte[] decrypt(byte[] ciphertext) {
-        return CryptoppNative.decrypt(ciphertext, keyData.curveModulus,
-                                      keyData.curveA, keyData.curveB,
-                                      keyData.gX, keyData.gY, keyData.n,
-                                      keyData.x);
+        byte result[] = CryptoppNative.decrypt(ciphertext, keyData.curveModulus,
+                                               keyData.curveA, keyData.curveB,
+                                               keyData.gX, keyData.gY,keyData.n,
+                                               keyData.x);
+        if (result == null) {
+            throw new IllegalStateException("Decryption failed!");
+        }
+        return result;
     }
 }
